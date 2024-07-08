@@ -1,40 +1,51 @@
-#ifndef SOUNDEX_H
-#define SOUNDEX_H
+#include<string.h>
+#include<ctype.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-#include "Soundex.h"
-#include <ctype.h>
-#include <string.h>
+#include"soundex.h"
 
-char getSoundexCode(char c) {
-    c = toupper(c);
-    switch (c) {
-        case 'B': case 'F': case 'P': case 'V': return '1';
-        case 'C': case 'G': case 'J': case 'K': case 'Q': case 'S': case 'X': case 'Z': return '2';
-        case 'D': case 'T': return '3';
-        case 'L': return '4';
-        case 'M': case 'N': return '5';
-        case 'R': return '6';
-        default: return '0'; // For A, E, I, O, U, H, W, Y
-    }
-}
+//--------------------------------------------------------
+// FUNCTION soundex
+//--------------------------------------------------------
+void soundex(char* name, char* s)
+{
+    int si = 1;
+    char c;
 
-void generateSoundex(const char *name, char *soundex) {
-    int len = strlen(name);
-    soundex[0] = toupper(name[0]);
-    int sIndex = 1;
+    //                 ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    char mappings[] = "01230120022455012623010202";
 
-    for (int i = 1; i < len && sIndex < 4; i++) {
-        char code = getSoundexCode(name[i]);
-        if (code != '0' && code != soundex[sIndex - 1]) {
-            soundex[sIndex++] = code;
+    s[0] = toupper(name[0]);
+
+    for(int i = 1, l = strlen(name); i < l; i++)
+    {
+        c = toupper(name[i]) - 65;
+
+        if(c >= 0 && c <= 25)
+        {
+            if(mappings[c] != '0')
+            {
+                if(mappings[c] != s[si-1])
+                {
+                    s[si] = mappings[c];
+                    si++;
+                }
+
+                if(si > 3)
+                {
+                    break;
+                }
+            }
         }
     }
 
-    while (sIndex < 4) {
-        soundex[sIndex++] = '0';
+    if(si <= 3)
+    {
+        while(si <= 3)
+        {
+            s[si] = '0';
+            si++;
+        }
     }
-
-    soundex[4] = '\0';
 }
-
-#endif // SOUNDEX_H
