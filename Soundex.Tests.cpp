@@ -19,7 +19,7 @@ generateSoundex("*#12hi", soundex);
 ASSERT_STREQ(soundex,"*000");
 }
 TEST(SoudexTestsuite, ReplacesConsonantsWithAppropriateDigits_vowels) {
-//AAA
+//AA
 char soundex[5];
 generateSoundex("aeiou", soundex);
 ASSERT_STREQ(soundex,"A000");
